@@ -67,4 +67,4 @@ jobs:
       run: |
         cd HMS
         echo "OPENAI_API_KEY=dummy_key" > .env
-        docker-compose build
+        docker compose build
