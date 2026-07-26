@@ -11,16 +11,34 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      # If you need a database service, you can define it here. 
-      # Since db.sqlite3 is used locally, we'll just use that for tests, but you can configure Postgres/MySQL if needed.
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: kamal
+          MYSQL_DATABASE: HMS
+          MYSQL_USER: kamal
+          MYSQL_PASSWORD: kamal
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     
     steps:
     - uses: actions/checkout@v4
     
+    - name: Add host.docker.internal to hosts
+      run: echo "127.0.0.1 host.docker.internal" | sudo tee -a /etc/hosts
+      
     - name: Set up Python 3.10
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
+        
+    - name: Install system dependencies for mysqlclient
+      run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev pkg-config
         
     - name: Install dependencies
       run: |
