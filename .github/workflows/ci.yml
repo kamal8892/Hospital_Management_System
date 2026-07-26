@@ -48,7 +48,7 @@ jobs:
         python -m pip install --upgrade pip
         cd HMS
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        touch .env
+        echo "OPENAI_API_KEY=dummy_key" > .env
 
         
     - name: Run Tests
@@ -66,5 +66,5 @@ jobs:
     - name: Build the Docker image
       run: |
         cd HMS
-        touch .env
+        echo "OPENAI_API_KEY=dummy_key" > .env
         docker-compose build
