@@ -63,4 +63,5 @@ jobs:
     - name: Build the Docker image
       run: |
         cd HMS
+        touch .env
         docker-compose build
