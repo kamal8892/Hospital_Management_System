@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appointments List</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef3f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 🔥 FIXED SLIDER BAR */
+    .top-slider {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      color: white;
+      transition: background 1s ease;
+      z-index: 1000;
+    }
+
+    .container {
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003b52;
+      margin-bottom: 25px;
+    }
+
+    .appointment-card {
+      width: 100%;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0px 0px 12px rgba(0,0,0,0.15);
+      border-left: 6px solid #008fa1;
+    }
+
+    .appointment-card h2 {
+      margin: 0;
+      color: #004466;
+      font-size: 22px;
+    }
+
+    .appointment-card p {
+      margin: 8px 0;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔥 FIXED SLIDER TEXT -->
+<div id="sliderBar" class="top-slider">
+  <a href="/dashboard/" style="position: absolute; left: 20px; top: 16px; color: white; text-decoration: none; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.2); padding: 8px 16px; border-radius: 8px; transition: background 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" onmouseover="this.style.background='rgba(0,0,0,0.4)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">⬅ Back to Dashboard</a>
+  <span id="sliderTextSpan">Loading...</span>
+</div>
+
+<div class="container">
+  <h1>Appointments List</h1>
+  <div id="appointmentContainer">Loading...</div>
+</div>
+
+<script>
+/* ---------------- SLIDING TEXT + COLOR ---------------- */
+
+const slides = [
+    { text: "Appointments List", color: "#0077b6" },
+    { text: "Healing Haven Hospital", color: "#2a9d8f" },
+    { text: "Caring For Every Patient", color: "#6a4c93" }
+];
+
+let slideIndex = 0;
+
+function changeSlide() {
+    let bar = document.getElementById("sliderBar");
+    let span = document.getElementById("sliderTextSpan");
+
+    if(span) span.innerText = slides[slideIndex].text;
+    bar.style.background = slides[slideIndex].color;
+
+    slideIndex = (slideIndex + 1) % slides.length;
+}
+
+setInterval(changeSlide, 2500);
+changeSlide();
+
+/* ---------------- APPOINTMENT DATA LOAD ---------------- */
+
+async function loadAppointments() {
+    let container = document.getElementById("appointmentContainer");
+
+    try {
+        let res = await fetch("http://127.0.0.1:8000/appoin/");
+        let data = await res.json();
+
+        container.innerHTML = "";
+
+        data.forEach(app => {
+
+            container.innerHTML += `
+                <div class="appointment-card">
+                    <h2>Appointment #${app.id}</h2>
+                    <p><b>Patient:</b> ${app.patient}</p>
+                    <p><b>Doctor:</b> ${app.doctor}</p>
+                    <p><b>Date:</b> ${app.appointment_date}</p>
+                    <p><b>Description:</b> ${app.issue_description}</p>
+                    <p><b>Status:</b> ${app.status}</p>
+                </div>
+            `;
+        });
+
+    } catch (err) {
+        container.innerHTML = "<p style='color:red;'>Error loading appointments...</p>";
+    }
+}
+
+loadAppointments();
+</script>
+
+</body>
+</html>

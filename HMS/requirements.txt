@@ -1,0 +1,17 @@
+django
+djangorestframework
+djangorestframework-simplejwt
+django-cors-headers
+celery
+django-celery-results
+google-auth
+mysqlclient
+pandas
+scikit-learn
+joblib
+python-dotenv
+langchain-openai
+langchain-core
+langgraph
+pymysql
+Pillow

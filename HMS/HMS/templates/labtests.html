@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lab Tests</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f2f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 🔥 Sliding Header */
+    .top-slider {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      padding: 16px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      animation: colorChange 6s infinite alternate ease-in-out;
+      border-bottom: 4px solid rgba(255,255,255,0.6);
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+
+    @keyframes colorChange {
+      0% { background: #007c9d; }
+      33% { background: #00996f; }
+      66% { background: #5a4fcf; }
+      100% { background: #00a1b3; }
+    }
+
+    #labContainer {
+      padding: 28px;
+    }
+
+    /* Lab Test Cards */
+    .lab-card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      box-shadow: 0px 4px 14px rgba(0,0,0,0.12);
+      border-left: 6px solid #0094c4;
+      transition: 0.3s;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.7s forwards;
+    }
+
+    .lab-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0px 9px 24px rgba(0,0,0,0.22);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lab-card h2 {
+      margin: 0;
+      font-size: 22px;
+      color: #004a61;
+    }
+
+    .lab-card p {
+      margin: 6px 0;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔥 Sliding Heading -->
+<div class="top-slider" id="slideBar">
+  <a href="/dashboard/" style="position: absolute; left: 20px; top: 16px; color: white; text-decoration: none; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.2); padding: 8px 16px; border-radius: 8px; transition: background 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" onmouseover="this.style.background='rgba(0,0,0,0.4)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">⬅ Back to Dashboard</a>
+  <span id="sliderTextSpan">Loading...</span>
+</div>
+
+<div id="labContainer">Loading...</div>
+
+<script>
+/* 🔥 SLIDER TEXTS */
+const slideTexts = [
+  "🧪 Lab Tests",
+  "🔬 Accurate Diagnostic Services",
+  "❤️ Trusted By Patients & Doctors"
+];
+
+let index = 0;
+function updateSlide() {
+  let span = document.getElementById("sliderTextSpan");
+  if(span) span.innerHTML = slideTexts[index];
+  index = (index + 1) % slideTexts.length;
+}
+updateSlide();
+setInterval(updateSlide, 2500);
+
+/* 🔥 FETCH LAB TEST LIST */
+async function loadLabTests() {
+  let container = document.getElementById("labContainer");
+
+  try {
+      let res = await fetch("http://127.0.0.1:8000/labtest/");  // CHANGE API IF NEEDED
+      let data = await res.json();
+
+      container.innerHTML = "";
+
+      data.forEach((t, i) => {
+          setTimeout(() => {
+              container.innerHTML += `
+                  <div class="lab-card">
+                      <h2>${t.test_name}</h2>
+                      <p><b>price:</b> ${t.test_price}</p>
+                      <p><b>Description :</b> ${t.description }</p>
+                      
+                  </div>
+              `;
+          }, i * 150);
+      });
+
+  } catch (err) {
+      container.innerHTML = "<p style='color:red;'>Error loading lab tests...</p>";
+  }
+}
+
+loadLabTests();
+</script>
+
+</body>
+</html>

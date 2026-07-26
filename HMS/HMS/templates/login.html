@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hospital Login</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    // Redirect if already logged in
+    if (localStorage.getItem("access")) {
+        window.location.href = "/dashboard/";
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 40px 45px;
+      width: 400px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { 
+      text-align: center; 
+      color: #004d40; 
+      margin-bottom: 30px; 
+      font-weight: 700;
+      font-size: 28px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      color: #00695c;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(0, 105, 92, 0.2);
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #00897b;
+      box-shadow: 0 0 0 4px rgba(0, 137, 123, 0.15);
+      background: #ffffff;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+      color: white;
+      border: none;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 105, 92, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 105, 92, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    #msg {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .footer-link {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 15px;
+      color: #00695c;
+    }
+
+    .footer-link a {
+      color: #00897b;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s ease;
+    }
+
+    .footer-link a:hover {
+      color: #004d40;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Welcome Back</h2>
+
+  <form id="loginForm">
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" name="email" placeholder="Enter your email" required />
+    </div>
+
+    <div class="input-group">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <label style="margin-bottom: 0;">Password</label>
+        <a href="#" id="forgotBtn" style="font-size: 13px; color: #00897b; text-decoration: none; font-weight: 600;">Forgot Password?</a>
+      </div>
+      <input type="password" name="password" placeholder="Enter your password" required />
+    </div>
+
+    <button type="submit">Log In</button>
+  </form>
+
+  <div style="margin: 20px 0; text-align: center;">
+    <p style="color: #00695c; font-weight: 600; margin-bottom: 10px;">OR</p>
+    
+    <div id="g_id_onload"
+         data-client_id="{{ GOOGLE_OAUTH_CLIENT_ID }}"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleCredentialResponse"
+         data-auto_prompt="false">
+    </div>
+
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left"
+         style="display: flex; justify-content: center;">
+    </div>
+  </div>
+
+  <form id="forgotEmailForm" style="display: none;">
+    <h3 style="text-align: center; color: #00695c; margin-top: 0;">Reset Password</h3>
+    <div class="input-group">
+      <label>Email Address</label>
+      <input type="email" id="resetEmailInput" placeholder="Enter your email" required />
+    </div>
+    <button type="submit">Send OTP</button>
+    <div style="text-align: center; margin-top: 15px;">
+      <a href="#" id="backToLoginBtn" style="font-size: 14px; color: #00695c; text-decoration: none; font-weight: 600;">Back to Login</a>
+    </div>
+  </form>
+
+  <form id="resetPasswordForm" style="display: none;">
+    <h3 style="text-align: center; color: #00695c; margin-top: 0;">Create New Password</h3>
+    <div class="input-group">
+      <label>Enter 6-Digit OTP</label>
+      <input type="text" id="resetOtpInput" placeholder="000000" maxlength="6" required />
+    </div>
+    <div class="input-group">
+      <label>New Password</label>
+      <input type="password" id="newPasswordInput" placeholder="Enter new password" required />
+    </div>
+    <button type="submit">Reset & Log In</button>
+  </form>
+
+  <p id="msg"></p>
+
+  <div class="footer-link">
+    Don't have an account? <a href="/signuppage/">Sign up</a>
+  </div>
+</div>
+
+
+<script>
+async function handleGoogleCredentialResponse(response) {
+    let id_token = response.credential;
+    
+    let res = await fetch("/auth/google/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_token: id_token, action: "login" }),
+    });
+
+    let result = await res.json();
+
+    if (res.status === 200) {
+        localStorage.setItem("access", result.access);
+        localStorage.setItem("refresh", result.refresh);
+        localStorage.setItem("user", JSON.stringify(result.user));
+
+        document.getElementById("msg").innerHTML = "Google Login Successful!";
+        document.getElementById("msg").style.color = "green";
+
+        setTimeout(() => {
+            window.location.href = "/dashboard/";
+        }, 1000);
+    } else {
+        document.getElementById("msg").innerHTML = result.error || "Google Login Failed";
+        document.getElementById("msg").style.color = "red";
+    }
+}
+
+document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    let data = Object.fromEntries(new FormData(this));
+
+    let response = await fetch("/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+
+    let result = await response.json();
+
+    if (response.status === 200) {
+        localStorage.setItem("access", result.access);
+        localStorage.setItem("refresh", result.refresh);
+        localStorage.setItem("user", JSON.stringify(result.user));
+
+        document.getElementById("msg").innerHTML = "Login Successful!";
+        document.getElementById("msg").style.color = "green";
+
+        setTimeout(() => {
+            window.location.href = "/dashboard/";
+        }, 1000);
+    } else {
+        document.getElementById("msg").innerHTML = result.msg || result.error || "Login Failed";
+        document.getElementById("msg").style.color = "red";
+    }
+});
+
+// --- FORGOT PASSWORD FLOW ---
+let resetEmail = "";
+
+document.getElementById("forgotBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("forgotEmailForm").style.display = "block";
+    document.getElementById("msg").innerHTML = "";
+});
+
+document.getElementById("backToLoginBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("forgotEmailForm").style.display = "none";
+    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("msg").innerHTML = "";
+});
+
+document.getElementById("forgotEmailForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    resetEmail = document.getElementById("resetEmailInput").value;
+    document.getElementById("msg").innerHTML = "Sending OTP...";
+    document.getElementById("msg").style.color = "#00695c";
+
+    let response = await fetch("/auth/password/forgot/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail })
+    });
+
+    let result = await response.json();
+
+    if (response.status === 200) {
+        document.getElementById("msg").innerHTML = "OTP sent to your email!";
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("forgotEmailForm").style.display = "none";
+        document.getElementById("resetPasswordForm").style.display = "block";
+    } else {
+        document.getElementById("msg").innerHTML = result.error || "Error sending OTP";
+        document.getElementById("msg").style.color = "red";
+    }
+});
+
+document.getElementById("resetPasswordForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    let otp = document.getElementById("resetOtpInput").value;
+    let newPassword = document.getElementById("newPasswordInput").value;
+    document.getElementById("msg").innerHTML = "Resetting password...";
+    document.getElementById("msg").style.color = "#00695c";
+
+    let response = await fetch("/auth/password/reset/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail, otp_code: otp, new_password: newPassword })
+    });
+
+    let result = await response.json();
+
+    if (response.status === 200) {
+        document.getElementById("msg").innerHTML = "Password reset successfully! Please log in.";
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("resetPasswordForm").style.display = "none";
+        document.getElementById("loginForm").style.display = "block";
+    } else {
+        document.getElementById("msg").innerHTML = result.error || "Error resetting password";
+        document.getElementById("msg").style.color = "red";
+    }
+});
+</script>
+
+</body>
+</html>

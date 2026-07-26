@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patient Rooms</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom right, #e8f4f8, #f7fbfc);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 🔥 Sliding Bar */
+    .top-slider {
+      position: sticky;
+      top: 0;
+      z-index: 2000;
+      width: 100%;
+      padding: 16px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      animation: bgChange 6s infinite alternate ease-in-out;
+      border-bottom: 4px solid #ffffffa2;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* Changing background colors */
+    @keyframes bgChange {
+      0% { background: #006c8a; }
+      33% { background: #007c56; }
+      66% { background: #5a4fcf; }
+      100% { background: #008fa1; }
+    }
+
+    /* Container */
+    #roomContainer {
+      padding: 30px;
+    }
+
+    /* 🔥 Animated Room Cards */
+    .room-card {
+      width: 100%;
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+      border-left: 8px solid #0097a7;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 0.7s forwards;
+    }
+
+    .room-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0px 8px 25px rgba(0,0,0,0.25);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .room-card h2 {
+      margin: 0 0 10px 0;
+      color: #006a83;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .room-card p {
+      margin: 6px 0;
+      font-size: 17px;
+      color: #333;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🔥 Sliding Bar -->
+<div class="top-slider" id="slideBar">
+    <a href="/dashboard/" style="position: absolute; left: 20px; top: 16px; color: white; text-decoration: none; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.2); padding: 8px 16px; border-radius: 8px; transition: background 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" onmouseover="this.style.background='rgba(0,0,0,0.4)'" onmouseout="this.style.background='rgba(0,0,0,0.2)'">⬅ Back to Dashboard</a>
+    <span id="sliderTextSpan">Loading...</span>
+</div>
+
+<div id="roomContainer">Loading...</div>
+
+<script>
+
+/* 🔥 SLIDER TEXT ROTATION */
+const sliderTexts = [
+    "🏥 Patient Rooms",
+    "🛏️ Comfortable & Clean Rooms",
+    "🌟 24/7 Nursing Support",
+    "💙 Healing Starts Here!"
+];
+
+let index = 0;
+
+function rotateSlider() {
+    let span = document.getElementById("sliderTextSpan");
+    if(span) span.innerHTML = sliderTexts[index];
+    index = (index + 1) % sliderTexts.length;
+}
+
+rotateSlider();
+setInterval(rotateSlider, 2500); // Change every 2.5 sec
+
+
+/* 🔥 FETCH ROOM LIST */
+async function loadRooms() {
+    let container = document.getElementById("roomContainer");
+
+    try {
+        let res = await fetch("http://127.0.0.1:8000/roomlist/");
+        let data = await res.json();
+
+        container.innerHTML = "";
+
+        data.forEach((r, i) => {
+            setTimeout(() => {
+                container.innerHTML += `
+                    <div class="room-card">
+                        <h2>Room No: ${r.room_number}</h2>
+                        <p><b>Room Type:</b> ${r.room_type}</p>
+                        <p><b>Charges:</b> ₹${r.room_charges_per_day}/day</p>
+                    </div>
+                `;
+            }, i * 150);
+        });
+
+    } catch (err) {
+        container.innerHTML = "<p style='color:red;'>Error loading rooms...</p>";
+    }
+}
+
+loadRooms();
+</script>
+
+</body>
+</html>

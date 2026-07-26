@@ -1,0 +1,30 @@
+{
+  "General Physician": {
+    "medicine": "Over-the-counter pain or fever relievers (consult a pharmacist)",
+    "tips": "Rest, stay hydrated, and monitor your symptoms closely."
+  },
+  "Cardiologist": {
+    "medicine": "Do not self-medicate for heart-related symptoms.",
+    "tips": "Seek immediate emergency medical care if experiencing severe chest pain."
+  },
+  "Dermatologist": {
+    "medicine": "Over-the-counter allergy relief or soothing lotions (if minor).",
+    "tips": "Avoid scratching, keep the affected area clean, and avoid known allergens."
+  },
+  "Orthopedic": {
+    "medicine": "Over-the-counter anti-inflammatory gel (if minor sprain).",
+    "tips": "Rest the affected area, apply ice packs, and avoid heavy lifting."
+  },
+  "Gastroenterologist": {
+    "medicine": "Oral Rehydration Salts (ORS) or over-the-counter antacids.",
+    "tips": "Drink plenty of fluids, eat bland foods, and avoid spicy or oily meals."
+  },
+  "Psychiatrist": {
+    "medicine": "Prescription medication only (consult a professional).",
+    "tips": "Practice deep breathing, maintain a regular sleep schedule, and talk to someone you trust."
+  },
+  "Ophthalmologist": {
+    "medicine": "Lubricating eye drops (artificial tears).",
+    "tips": "Avoid rubbing your eyes, reduce screen time, and wash your hands frequently."
+  }
+}

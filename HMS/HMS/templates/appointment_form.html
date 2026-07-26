@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Appointment</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e9f5ee;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1b5e20;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 12px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        #paymentBox {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #a5d6a7;
+            background: #f1fff2;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            text-decoration: none;
+            font-size: 15px;
+            color: #2e7d32;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Book Appointment</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Patient Name</label>
+        <input type="text" name="patient_name" placeholder="Enter full name" required>
+
+        <label>Phone Number</label>
+        <input type="text" name="phone" placeholder="Enter phone number" required>
+
+        <label>Select Doctor</label>
+        <select name="doctor" id="doctorSelect" required>
+            <option value="">-- Select Doctor --</option>
+
+            <!-- STATIC DOCTOR LIST -->
+            <option value="Dr. Rajesh Saini">Dr. Rajesh Saini</option>
+            <option value="Dr. puskar Kumar">Dr. Puskar Kumar</option>
+            <option value="Dr. Akshya Nigam">Dr. Akshya Nigam</option>
+            <option value="Dr. Neha Saini">Dr. Neha Saini</option>
+            <option value="Dr. Arvind Saini">Dr. Arvind Saini</option>
+            <option value="Dr. Punita Soni">Dr. Punita Soni</option>
+        </select>
+
+        <label>Select Date</label>
+        <input type="date" name="date" required>
+
+        <label>Select Time</label>
+        <input type="time" name="time" required>
+
+        <label>Problem / Symptoms</label>
+        <textarea name="symptoms" placeholder="Describe your health issue..."></textarea>
+
+        <!-- PAYMENT SECTION -->
+        <div id="paymentBox">
+            <h3 style="color:#1b5e20; text-align:center;">Complete Payment</h3>
+
+            <label>Amount</label>
+            <input type="text" value="500 ₹ (Doctor Consultation)" readonly>
+
+            <label>UPI / Card Number</label>
+            <input type="text" placeholder="Enter UPI ID or Card Number">
+
+            <button type="button" onclick="completePayment()">Pay Now</button>
+
+            <p id="payStatus" style="text-align:center; color:green; font-weight:bold; display:none;">
+                ✔ Payment Successful
+            </p>
+        </div>
+
+        <button id="submitBtn" type="submit" disabled>Book Appointment</button>
+
+        <a href="/dashboard/" class="back-btn">← Back to Dashboard</a>
+
+    </form>
+
+</div>
+
+
+<script>
+    // Show payment section after doctor selection
+    document.getElementById("doctorSelect").addEventListener("change", function () {
+        document.getElementById("paymentBox").style.display = "block";
+    });
+
+    // Fake payment function
+    function completePayment() {
+        document.getElementById("payStatus").style.display = "block";
+
+        // Enable submit button after payment
+        document.getElementById("submitBtn").disabled = false;
+        document.getElementById("submitBtn").style.background = "#1b5e20";
+    }
+</script>
+
+</body>
+</html>
